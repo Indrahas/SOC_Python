@@ -44,14 +44,15 @@ def get_EKF(R0, R1, C1, std_dev, time_step):
     return EKF(x, F, B, P, Q, R, Hx, HJacobian)
 
 
-def plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, current,OCVEstim):
+def plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, current,OCVEstim,temp):
     import matplotlib.pyplot as plt
 
     fig = plt.figure()
-    ax1 = fig.add_subplot(411)
-    ax2 = fig.add_subplot(412)
-    ax3 = fig.add_subplot(413)
-    ax4 = fig.add_subplot(414)
+    ax1 = fig.add_subplot(511)
+    ax2 = fig.add_subplot(512)
+    ax3 = fig.add_subplot(513)
+    ax4 = fig.add_subplot(514)
+    ax5 = fig.add_subplot(515)
     # title, labels
     ax1.set_title('')    
     ax1.set_xlabel('Time / s')
@@ -69,6 +70,7 @@ def plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, curren
     ax2.plot(time, estim_SoC, label="Estimated SoC")
     ax3.plot(time, current, label="Current")
     ax4.plot(time,OCVEstim)
+    ax5.plot(temp)
     ax1.legend()
     ax2.legend()
     ax3.legend()
@@ -78,15 +80,18 @@ def plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, curren
 
 if __name__ == '__main__':
     data = pd.read_csv("data.csv")
-    data["total_power"] = (data["power_left"]+data["power_right"])/96
-    temp = data["total_power"].tolist()
+    # data["total_power"] = (data["power_left"]+data["power_right"])/96
+    # temp = data["total_power"].tolist()
     power = []
+    ener = (data["total_energy"]*1000*3600)/(data["time_step"]*96)
+    temp = ener.tolist()
     for i in temp:
-        if i!=0:
+        if i>0:
             power.append(i)
     # total capacity
+    print(max(power))
     print(len(power)/len(temp) * 100)
-    Q_tot = 3.2
+    Q_tot = 22
     
     # Thevenin model values
     R0 = 0.062
@@ -137,4 +142,4 @@ if __name__ == '__main__':
     launch_experiment_protocol(Q_tot, time_step, update_all,power)
 
     # plot stuff
-    plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, current,OCVEstim)
+    plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, current,OCVEstim,temp)

@@ -18,8 +18,8 @@ class Battery:
         self._RC_voltage = 0
 
         # polynomial representation of OCV vs SoC
-        self._OCV_model = Polynomial([3.1400, 3.9905, -14.2391, 24.4140, -13.5688, -4.0621, 4.5056])
-
+        self._OCV_model = Polynomial([2.90135,8.94218,-45.15089,108.22153,-124.92979,62.31448,-8.21512])
+        # self._OCV_model = Polynomial([4.08374,-5.86748,29.85287,-67.34463,63.4157,-13.02371,-8.21512])
     def update(self, time_delta):
         self.actual_capacity -= self.current * time_delta
         exp_coeff = m.exp(-time_delta/(self.R1*self.C1))
@@ -36,7 +36,7 @@ class Battery:
 
     @property
     def voltage(self):
-        return self.OCV - self.R0 * self.current - self._RC_voltage
+        return self.OCV - (self.R0 * self.current) - self._RC_voltage
 
     @property
     def state_of_charge(self):

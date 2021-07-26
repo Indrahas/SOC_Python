@@ -29,7 +29,10 @@ def launch_experiment_protocol(Q_tot, time_step, experiment_callback,power):
     current = power[0]/4.2
     for instantPower in power:
         voltage = experiment_callback(current,instantPower)
-        current = instantPower/voltage
+        current = (instantPower/voltage)
+        if current<-1000:
+            print(current," ",voltage)
+            current=0
         time += time_step
     # while time < discharge_constants_stages_time:
     #     experiment_callback(current)

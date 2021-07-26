@@ -6,6 +6,7 @@ class Polynomial:
     def __call__(self, x):
         value = 0
         for i, coeff in enumerate(self._coeffs):
+            # print(i," ",coeff)
             value += coeff * x ** i
         return value
 
@@ -18,7 +19,8 @@ class Polynomial:
 
 
 if __name__ == '__main__':
-    my_poly = Polynomial([0])
+    my_poly = Polynomial([4.0837,5.87,30,-70,-60,-10,-8])
+    # print()
     my_poly_deriv = my_poly.deriv
     print(my_poly._coeffs)
     print(my_poly_deriv._coeffs)
